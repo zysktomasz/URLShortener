@@ -1,34 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using URLShortener.Data;
 
 namespace URLShortener
 {
     public class Startup
     {
+        IConfigurationRoot Configuration;
+
+        public Startup(IHostingEnvironment env)
+        {
+            Configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appsettings.json").Build();
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            #region services for TempData (as for now)
+            services.AddMemoryCache();
+            services.AddSession();
+            #endregion
+            
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSession();
+            app.UseStatusCodePages();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
+            // Add support for node_modules but only during development **temporary**
+            // using npm instead of bower
+            // (solution from some blog) - not rly important right now
+            app.UseStaticFiles(new StaticFileOptions()
             {
-                await context.Response.WriteAsync("Hello World!");
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), @"node_modules")),
+                RequestPath = new PathString("/vendor")
+            });
+
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "actions",
+                    template: "{action=Index}",
+                    defaults: new { controller = "Home" });
+
+                routes.MapRoute(
+                    name: "targetRedirection",
+                    template: "{urlName}",
+                    defaults: new { controller = "Home", action = "RedirectToTarget" });
             });
         }
+
+        
     }
 }

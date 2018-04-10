@@ -1,0 +1,39 @@
+﻿@model  Url
+@{ Layout = null; }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="~/vendor/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body class="panel-body">
+    <div style="max-width: 900px; margin-left: auto; margin-right: auto; text-align: center;">
+
+    @if (!String.IsNullOrEmpty((string)TempData["shortenedUrl"]))
+    {
+    <div class="form-group row">
+        <div class="col-6">
+            Your shortened URL:
+            <input class="form-control" id="shortenedUrl" type="text" value="http://@Context.Request.Host@Context.Request.Path@TempData["shortenedUrl"]">
+
+        </div>
+    </div>
+    }
+    <div class="display-4">Shorten your URL</div>
+
+    <form asp-action="Index" method="post">
+        <div asp-validation-summary="All" class="text-danger" style="text-align:left;"></div>
+
+        <div class="row align-items-center justify-content-center">
+            <div class="col-8 form-group">
+                <input asp-for="TargetUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+            </div>
+            <div class="col-4 form-group" style="text-align: left;">
+                <button type="submit" class="btn btn-primary">Shorten</button>
+            </div>
+        </div>
+    </form>
+        </div>
+</body>
+</html>
