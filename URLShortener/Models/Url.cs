@@ -10,7 +10,6 @@ namespace URLShortener.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        [Required(ErrorMessage = "Your target url field is required." )]
         public string TargetUrl { get; set; }
     }
 }

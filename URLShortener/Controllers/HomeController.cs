@@ -21,23 +21,28 @@ namespace URLShortener.Controllers
         // GET: /Index
         public IActionResult Index()
         {
-            return View(new Url{});
+            return View(new UrlViewModel{});
         }
 
         // POST: /Index
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async  Task<IActionResult> Index([Bind("TargetUrl")] Url url)
+        public async  Task<IActionResult> Index([Bind("TargetUrl,CustomName")] UrlViewModel urlVM)
         {
-            var randomName = GenerateRandomUrlName();
-            url.Name = randomName;
+            var url = new Url { };
+
+            var createdName = urlVM.CustomName ?? GenerateRandomUrlName();
+
+            url.Name = createdName;
+            url.TargetUrl = urlVM.TargetUrl;
+            
             try
             {
-                if (ModelState.IsValid) // no real validation as for now
+                if (ModelState.IsValid)
                 {
                     _context.Add(url);
                     await _context.SaveChangesAsync();
-                    TempData["shortenedUrl"] = randomName;
+                    TempData["shortenedUrl"] = createdName;
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -55,7 +60,7 @@ namespace URLShortener.Controllers
         public async Task<IActionResult> RedirectToTarget(string urlName)
         {
             var url = await _context.Urls.SingleOrDefaultAsync(u => u.Name == urlName);
-            // no real validation as for now
+
             if (url != null && url.TargetUrl != null)
                 return Redirect(url.TargetUrl);
 
@@ -78,5 +83,6 @@ namespace URLShortener.Controllers
 
             return new String(stringChars);
         }
+
     }
 }
