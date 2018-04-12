@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using URLShortener.Data;
 using URLShortener.Models;
+using URLShortener.Models.ViewModels;
 
 namespace URLShortener.Controllers
 {
@@ -27,14 +28,19 @@ namespace URLShortener.Controllers
         // POST: /Index
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async  Task<IActionResult> Index([Bind("TargetUrl,CustomName")] UrlViewModel urlVM)
+        public async  Task<IActionResult> Index([Bind("TargetUrl,CustomName")] UrlViewModel model)
         {
+            var createdName = model.CustomName ?? GenerateRandomUrlName();
+
+            if (await _context.Urls.AnyAsync(u => u.Name == createdName))
+            {
+                ModelState.AddModelError("", $"{createdName} name is already taken. Try different one.");
+                return View();
+            }
+
             var url = new Url { };
-
-            var createdName = urlVM.CustomName ?? GenerateRandomUrlName();
-
             url.Name = createdName;
-            url.TargetUrl = urlVM.TargetUrl;
+            url.TargetUrl = model.TargetUrl;
             
             try
             {
@@ -59,13 +65,14 @@ namespace URLShortener.Controllers
         // GET: /RedirectToAction
         public async Task<IActionResult> RedirectToTarget(string urlName)
         {
-            var url = await _context.Urls.SingleOrDefaultAsync(u => u.Name == urlName);
+            var url = await _context.Urls.FirstOrDefaultAsync(u => u.Name == urlName);
 
             if (url != null && url.TargetUrl != null)
                 return Redirect(url.TargetUrl);
 
             return RedirectToAction(nameof(Index));
         }
+
 
         private string GenerateRandomUrlName()
         {

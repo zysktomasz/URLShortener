@@ -1,16 +1,25 @@
 ﻿URL Shortening web app z użyciem ASP .NET Core 2.0 MVC + EF Core
 
-Prezentacja poniżej:
+Prezentacja:
 
-![alpha url shortener prezentacja](https://i.imgur.com/prQJyhk.gif)
+![skracanie](https://i.imgur.com/DfUYxlE.gif)
 
+Rejestracja
+![rejestracja](https://i.imgur.com/wmVP7VA.gif)
+
+Logowanie
+![logowanie](https://i.imgur.com/5VoofXU.gif)
 
 # Changelog
+
+## [0.0.1.0] - 2018-04-12
+### Dodane
+- Mozliwosc tworzenia konta i logowania
 
 ## [0.0.0.2] - 2018-04-11
 ### Dodane
 - Opcja podania wlasnej nazwy skroconego linka
 - Dodane atrybuty weryfikujace poprawnosc pol
 
-### Zmieniony
-- model obslugujacy widok strony glownej (z Url na UrlViewModel)
+### Zmienione
+- Model obslugujacy widok strony glownej (z Url na UrlViewModel)

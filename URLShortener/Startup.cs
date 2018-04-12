@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +29,23 @@ namespace URLShortener
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("UrlShortenerDB")));
+
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("UrlShortenerIdentityDB")));
+
+          
+            // configuring password policy for users
+            services.AddIdentity<IdentityUser, IdentityRole>(opts =>
+            {
+                opts.User.RequireUniqueEmail = true;
+
+                opts.Password.RequiredLength = 6;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireDigit = false;
+            }).AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
             #region services for TempData (as for now)
             services.AddMemoryCache();
@@ -59,6 +76,7 @@ namespace URLShortener
                 RequestPath = new PathString("/vendor")
             });
 
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
@@ -71,6 +89,11 @@ namespace URLShortener
                     name: "targetRedirection",
                     template: "{urlName}",
                     defaults: new { controller = "Home", action = "RedirectToTarget" });
+
+                routes.MapRoute(
+                    name: "",
+                    template: "{controller}/{action}"
+                    );
             });
         }
 

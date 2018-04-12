@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace URLShortener.Models
+namespace URLShortener.Models.ViewModels
 {
     public class UrlViewModel
     {
@@ -12,7 +12,7 @@ namespace URLShortener.Models
         [Url] // **temporary** url validation, will prolly replace with something custom
         public string TargetUrl { get; set; }
         [StringLength(50, MinimumLength = 1)]
-        [RegularExpression(@"^\S+$", ErrorMessage = "No white space allowed")]
+        [RegularExpression(@"^\S+$", ErrorMessage = "No white space allowed in Custom Name field")]
         public string CustomName { get; set; }
 
     }
