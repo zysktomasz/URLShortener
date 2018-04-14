@@ -7,25 +7,38 @@ using URLShortener.Models;
 using URLShortener.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
-
+using URLShortener.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace URLShortener.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(ApplicationDbContext context,
+                    UserManager<ApplicationUser> userManager, 
+                    SignInManager<ApplicationUser> signInManager)
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        public async Task<IActionResult> List()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var urls = await _context.Urls.Where(u => u.User == currentUser).ToListAsync();
+            return View(urls);
         }
 
         [AllowAnonymous]
         public IActionResult Login()
         {
+           
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("Index", "Home", new { area = "" });
 
@@ -37,6 +50,7 @@ namespace URLShortener.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            var userid = User.Identity.Name;
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(
@@ -55,6 +69,7 @@ namespace URLShortener.Controllers
         }
 
         
+        
         [AllowAnonymous]
         public IActionResult Register()
         {
@@ -71,7 +86,7 @@ namespace URLShortener.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = new IdentityUser
+                var user = new ApplicationUser
                 {
                     UserName = model.Email,
                     Email = model.Email
@@ -92,6 +107,7 @@ namespace URLShortener.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
+            
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home", new { area = "" });
         }

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -7,6 +9,23 @@
 </head>
 <body class="panel-body">
     <div>
+        <nav class="navbar navbar-light justify-content-between" style="background-color: #e3f2fd;">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">URLShortener</a>
+@if (SignInManager.IsSignedIn(User))
+{
+        <form asp-controller="Account" asp-action="Logout" class="form-inline" method="post">
+            Hello, @UserManager.GetUserName(User)
+            <button type="submit" class="btn btn-secondary">Logout</button>
+        </form>
+}
+else
+{
+        <form class="form-inline">
+            <input type="button" value="Login" onclick="location.href='@Url.Action("Login", "Account")'" class="btn btn-secondary" style="margin-right:5px;">
+            <input type="button" value="Register" onclick="location.href='@Url.Action("Register", "Account")'" class="btn btn-secondary">
+        </form>
+}
+        </nav>
         @RenderBody()
     </div>
 </body>

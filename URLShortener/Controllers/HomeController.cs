@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using URLShortener.Data;
@@ -12,11 +13,13 @@ namespace URLShortener.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(AppDbContext context)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: /Index
@@ -41,7 +44,8 @@ namespace URLShortener.Controllers
             var url = new Url { };
             url.Name = createdName;
             url.TargetUrl = model.TargetUrl;
-            
+            url.User = await _userManager.GetUserAsync(User);
+
             try
             {
                 if (ModelState.IsValid)

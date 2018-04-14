@@ -10,7 +10,19 @@ Rejestracja
 Logowanie
 ![logowanie](https://i.imgur.com/5VoofXU.gif)
 
+Lista linkow
+![lista linkow](https://i.imgur.com/bC8lq8t.png)
+
 # Changelog
+
+## [0.0.2.0] - 2018-04-14
+### Dodane
+- wlasna implementacja IdentityUser
+- polaczenie skracanych linkow z uzytkownikami
+- lista linkow dla danego uzytkownika
+
+### Zmienione
+- Jedna baza danych i jeden DbContext dla Indetity i pozostalych tabel (zamiast dwoch oddzielnych) 
 
 ## [0.0.1.0] - 2018-04-12
 ### Dodane

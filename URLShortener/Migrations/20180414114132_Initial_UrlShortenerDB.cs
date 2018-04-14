@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace URLShortener.Migrations.AppIdentityDb
+namespace URLShortener.Migrations
 {
-    public partial class InitialIdentity : Migration
+    public partial class Initial_UrlShortenerDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,20 @@ namespace URLShortener.Migrations.AppIdentityDb
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Url",
+                columns: table => new
+                {
+                    UrlId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    TargetUrl = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Url", x => x.UrlId);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,6 +224,9 @@ namespace URLShortener.Migrations.AppIdentityDb
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Url");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

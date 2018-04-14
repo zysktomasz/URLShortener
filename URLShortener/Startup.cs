@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using URLShortener.Data;
+using URLShortener.Models;
 
 namespace URLShortener
 {
@@ -28,15 +29,12 @@ namespace URLShortener
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("UrlShortenerDB")));
 
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("UrlShortenerIdentityDB")));
 
-          
             // configuring password policy for users
-            services.AddIdentity<IdentityUser, IdentityRole>(opts =>
+            services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
             {
                 opts.User.RequireUniqueEmail = true;
 
@@ -45,7 +43,7 @@ namespace URLShortener
                 opts.Password.RequireLowercase = false;
                 opts.Password.RequireUppercase = false;
                 opts.Password.RequireDigit = false;
-            }).AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             #region services for TempData (as for now)
             services.AddMemoryCache();

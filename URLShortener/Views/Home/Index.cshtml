@@ -1,26 +1,8 @@
 ﻿@model UrlViewModel
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+
 @{
     ViewData["Title"] = "Index";
 }
-<nav class="navbar navbar-light justify-content-between" style="background-color: #e3f2fd;">
-    <a class="navbar-brand">URLShortener</a>
-    @if (SignInManager.IsSignedIn(User))
-    {
-    <form asp-controller="Account" asp-action="Logout" class="form-inline" method="post">
-            Hello, @UserManager.GetUserName(User)
-        <button type="submit" class="btn btn-secondary">Logout</button>
-    </form>
-    } else
-    {
-        <form class="form-inline">
-            <input type="button" value="Login" onclick="location.href='@Url.Action("Login", "Account")'" class="btn btn-secondary" style="margin-right:5px;">
-            <input type="button" value="Register" onclick="location.href='@Url.Action("Register", "Account")'" class="btn btn-secondary">
-        </form>
-    }
-</nav>
-
 <div style="max-width: 900px; margin-left: auto; margin-right: auto; text-align: center;">
 
     @if (!String.IsNullOrEmpty((string)TempData["shortenedUrl"]))
