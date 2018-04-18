@@ -31,9 +31,9 @@ namespace URLShortener.Controllers
         // POST: /Index
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async  Task<IActionResult> Index([Bind("TargetUrl,CustomName")] UrlViewModel model)
+        public async  Task<IActionResult> Index([Bind("TargetUrl,Name")] UrlViewModel urlVM)
         {
-            var createdName = model.CustomName ?? GenerateRandomUrlName();
+            var createdName = urlVM.Name ?? Helper.GenerateRandomUrlName();
 
             if (await _context.Urls.AnyAsync(u => u.Name == createdName))
             {
@@ -43,7 +43,7 @@ namespace URLShortener.Controllers
 
             var url = new Url { };
             url.Name = createdName;
-            url.TargetUrl = model.TargetUrl;
+            url.TargetUrl = urlVM.TargetUrl;
             url.User = await _userManager.GetUserAsync(User);
 
             try
@@ -77,23 +77,6 @@ namespace URLShortener.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        private string GenerateRandomUrlName()
-        {
-            // brak kontroli nad zawartoscia generowanego ciagu
-            // return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 10);
-
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringChars = new char[8];
-            var random = new Random();
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
-            return new String(stringChars);
-        }
 
     }
 }

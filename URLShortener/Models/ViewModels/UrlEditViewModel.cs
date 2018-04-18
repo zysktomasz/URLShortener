@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace URLShortener.Models.ViewModels
 {
-    public class UrlViewModel
+    public class UrlEditViewModel
     {
+        public int UrlId { get; set; }
         [Required(ErrorMessage = "Your target address field is required.")]
         [Url] // **temporary** url validation, will prolly replace with something custom
         [Display(Name = "Target Url")]
@@ -16,6 +17,5 @@ namespace URLShortener.Models.ViewModels
         [RegularExpression(@"^\S+$", ErrorMessage = "No white space allowed in Custom Name field")]
         [Display(Name = "Custom Name")]
         public string Name { get; set; }
-
     }
 }

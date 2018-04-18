@@ -15,6 +15,16 @@ Lista linkow
 
 # Changelog
 
+## [0.0.3.0] - 2018-04-18
+### Dodane
+- Edycja wlasnych linkow (/Account/Link)
+- Usuwanie linkow (/Account/Delete)
+- Nowy UrlEditViewModel
+
+
+### Zmienione
+- Wyciagniecie metody tworzacej losowa nazwe linku do klasy statycznej (dostepne dla dwoch kontrolerow)
+
 ## [0.0.2.0] - 2018-04-14
 ### Dodane
 - wlasna implementacja IdentityUser

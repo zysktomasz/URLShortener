@@ -92,6 +92,11 @@ namespace URLShortener
                     name: "",
                     template: "{controller}/{action}"
                     );
+
+                routes.MapRoute(
+                    name: "",
+                    template: "{controller}/{action}/{urlid?}"
+                    );
             });
         }
 
