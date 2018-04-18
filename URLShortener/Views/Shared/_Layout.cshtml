@@ -9,23 +9,39 @@
 </head>
 <body class="panel-body">
     <div>
-        <nav class="navbar navbar-light justify-content-between" style="background-color: #e3f2fd;">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">URLShortener</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
 @if (SignInManager.IsSignedIn(User))
 {
-        <form asp-controller="Account" asp-action="Logout" class="form-inline" method="post">
-            Hello, @UserManager.GetUserName(User)
-            <button type="submit" class="btn btn-secondary">Logout</button>
-        </form>
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Account" asp-action="List">List of links</a>
+                </li>
+}
+               </ul>
+@if (SignInManager.IsSignedIn(User))
+{
+            <form asp-controller="Account" asp-action="Logout" class="form-inline my-2 my-lg-0" method="post">
+                Hello, @UserManager.GetUserName(User)
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
 }
 else
 {
-        <form class="form-inline">
-            <input type="button" value="Login" onclick="location.href='@Url.Action("Login", "Account")'" class="btn btn-secondary" style="margin-right:5px;">
-            <input type="button" value="Register" onclick="location.href='@Url.Action("Register", "Account")'" class="btn btn-secondary">
-        </form>
+            <form class="form-inline my-2 my-lg-0">
+                <input type="button" value="Login" onclick="location.href='@Url.Action("Login", "Account")'" class="btn btn-secondary" style="margin-right:5px;">
+                <input type="button" value="Register" onclick="location.href='@Url.Action("Register", "Account")'" class="btn btn-secondary">
+            </form>
 }
+                
+            </div>
         </nav>
+
         @RenderBody()
     </div>
 </body>

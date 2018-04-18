@@ -31,10 +31,16 @@ namespace URLShortener.Controllers
         }
 
         // GET: Account/List
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(int? page)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var urls = await _context.Urls.Where(u => u.User == currentUser).OrderByDescending(u => u.UrlId).ToListAsync();
+            int pageSize = 6;
+
+            var urls = await PaginatedList<Url>.CreateAsync(
+                _context.Urls
+                .Where(u => u.User == currentUser)
+                .OrderByDescending(u => u.UrlId), page ?? 1, pageSize);
+
             return View(urls);
         }
 
@@ -112,13 +118,18 @@ namespace URLShortener.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
             var urlToUpdate = await _context.Urls.SingleOrDefaultAsync(u => u.UrlId == urlEditVM.UrlId && u.User == currentUser);
+            var createdName = urlEditVM.Name ?? Helper.GenerateRandomUrlName();
+
+            if (await _context.Urls.AnyAsync(u => u.Name == createdName))
+            {
+                ModelState.AddModelError("Name", $"{createdName} name is already taken. Try different one.");
+                return View();
+            }
 
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var createdName = urlEditVM.Name ?? Helper.GenerateRandomUrlName();
-
                     urlToUpdate.Name = createdName;
                     urlToUpdate.TargetUrl = urlEditVM.TargetUrl;
 
@@ -152,7 +163,7 @@ namespace URLShortener.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login([Bind("UserName,Password")] LoginViewModel model)
         {
             var userid = User.Identity.Name;
             if (ModelState.IsValid)
@@ -187,7 +198,7 @@ namespace URLShortener.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register([Bind("Email,Password,ConfirmPassword")] RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {

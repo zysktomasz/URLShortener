@@ -15,12 +15,19 @@ Lista linkow
 
 # Changelog
 
+## [0.0.3.1] - 2018-04-19
+### Dodane
+- Paginacja linkow
+
+### Zmienione
+- Poprawione przekierowania na liscie linkow (z /account/edit?id=2 na /account/edit/2)
+- Zaktualizowany navbar
+
 ## [0.0.3.0] - 2018-04-18
 ### Dodane
 - Edycja wlasnych linkow (/Account/Link)
 - Usuwanie linkow (/Account/Delete)
 - Nowy UrlEditViewModel
-
 
 ### Zmienione
 - Wyciagniecie metody tworzacej losowa nazwe linku do klasy statycznej (dostepne dla dwoch kontrolerow)

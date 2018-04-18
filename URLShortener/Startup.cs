@@ -90,13 +90,15 @@ namespace URLShortener
 
                 routes.MapRoute(
                     name: "",
-                    template: "{controller}/{action}"
+                    template: "{controller}/{action}/{urlid?}"
                     );
 
                 routes.MapRoute(
                     name: "",
-                    template: "{controller}/{action}/{urlid?}"
+                    template: "{controller}/{action}"
                     );
+
+
             });
         }
 
