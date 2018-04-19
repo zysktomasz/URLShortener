@@ -15,6 +15,12 @@ Lista linkow
 
 # Changelog
 
+## [0.0.3.2] - 2018-04-19
+### Dodane
+- Panel Administratora - chroniony Policy (wymagajacy Roli Administratora) (/Admin)
+- Lista Uzytkownikow w PA (/Admin/Users/List)
+- 2 nowe ViewModele to powyzszych operacji (UserListVM, UserDeleteVM)
+
 ## [0.0.3.1] - 2018-04-19
 ### Dodane
 - Paginacja linkow

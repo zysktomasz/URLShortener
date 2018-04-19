@@ -51,6 +51,11 @@ namespace URLShortener
             #endregion
             
             services.AddMvc();
+
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,7 +95,12 @@ namespace URLShortener
 
                 routes.MapRoute(
                     name: "",
-                    template: "{controller}/{action}/{urlid?}"
+                    template: "{controller}/Users/{action}"
+                    );
+
+                routes.MapRoute(
+                    name: "",
+                    template: "{controller}/{action}/{id?}"
                     );
 
                 routes.MapRoute(
@@ -98,7 +108,7 @@ namespace URLShortener
                     template: "{controller}/{action}"
                     );
 
-
+                
             });
         }
 

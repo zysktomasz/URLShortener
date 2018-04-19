@@ -45,20 +45,20 @@ namespace URLShortener.Controllers
         }
 
         // GET: Account/Edit/420
-        public async Task<IActionResult> Edit(int? urlid)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (urlid == null)
+            if (id == null)
                 return NotFound();
 
             var currentUser = await _userManager.GetUserAsync(User);
-            var url = await _context.Urls.FirstOrDefaultAsync(u => u.UrlId == urlid && u.User == currentUser);
+            var url = await _context.Urls.FirstOrDefaultAsync(u => u.UrlId == id && u.User == currentUser);
 
             if (url == null)
                 return NotFound();
 
             var urlVM = new UrlEditViewModel
             {
-                UrlId = (int)urlid,
+                UrlId = (int)id,
                 TargetUrl = url.TargetUrl,
                 Name = url.Name
             };
@@ -68,13 +68,13 @@ namespace URLShortener.Controllers
         }
 
         // GET: Account/Delete/59
-        public async Task<IActionResult> Delete(int? urlid, bool? saveChangesError = false)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
-            if (urlid == null)
+            if (id == null)
                 return NotFound();
 
             var currentUser = await _userManager.GetUserAsync(User);
-            var url = await _context.Urls.FirstOrDefaultAsync(u => u.UrlId == urlid && u.User == currentUser);
+            var url = await _context.Urls.FirstOrDefaultAsync(u => u.UrlId == id && u.User == currentUser);
 
             if (url == null)
                 return NotFound();
@@ -90,10 +90,10 @@ namespace URLShortener.Controllers
         // POST: Account/Delete/59
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int urlid)
+        public async Task<IActionResult> Delete(int id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var url = await _context.Urls.FirstOrDefaultAsync(u => u.UrlId == urlid && u.User == currentUser);
+            var url = await _context.Urls.FirstOrDefaultAsync(u => u.UrlId == id && u.User == currentUser);
 
             if (url == null)
                 return RedirectToAction(nameof(List));
@@ -106,7 +106,7 @@ namespace URLShortener.Controllers
             }
             catch (DbUpdateException /* ex */)
             {
-                return RedirectToAction(nameof(Delete), new { id = urlid, saveChangesError = true });
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
             }
         }
 
@@ -237,5 +237,10 @@ namespace URLShortener.Controllers
             }
         }
 
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

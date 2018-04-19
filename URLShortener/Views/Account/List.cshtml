@@ -29,8 +29,8 @@
                         @Html.DisplayFor(modelItem => item.TargetUrl)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-urlid="@item.UrlId">Edit</a> |
-                        <a asp-action="Delete" asp-route-urlid="@item.UrlId">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.UrlId">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.UrlId">Delete</a>
                     </td>
                 </tr>
         }
