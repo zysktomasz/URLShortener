@@ -18,12 +18,17 @@ Lista linkow
 ## [0.0.3.3] - 2018-04-20
 ### Dodane
 - Usuwanie kont uzytkownikow (wraz z usunieciem konta, usuwane sa wszystkie linki uzytkownika)
+- Lista wszystkich linkow w PA (/Admin/Links/ListLinks)
+- Usuwanie linkow z PA
+- Navbar - dodany panel admina widoczny tylko dla admina
 
+### Zmienione
+- teraz poprawione, unikalne nazwy metod w AdminController (czytelniejszy routing)
 
 ## [0.0.3.2] - 2018-04-19
 ### Dodane
 - Panel Administratora - chroniony Policy (wymagajacy Roli Administratora) (/Admin)
-- Lista Uzytkownikow w PA (/Admin/Users/List)
+- Lista Uzytkownikow w PA (/Admin/Users/ListUsers)
 - 2 nowe ViewModele to powyzszych operacji (UserListVM, UserDeleteVM)
 
 ## [0.0.3.1] - 2018-04-19

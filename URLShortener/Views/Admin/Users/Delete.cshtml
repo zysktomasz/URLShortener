@@ -53,9 +53,9 @@
         </tbody>
     </table>
         </div>
-    <form asp-action="Delete">
+    <form asp-action="DeleteUser">
         <input type="hidden" asp-for="User.Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a href="/Admin/Users/List">Back to Users List</a>
+        <a asp-controller="Admin" asp-action="ListUsers">Back to Users List</a>
     </form>
 </div>

@@ -93,8 +93,6 @@ namespace URLShortener
                     template: "{urlName}",
                     defaults: new { controller = "Home", action = "RedirectToTarget" });
 
-
-
                 routes.MapRoute(
                     name: "",
                     template: "{controller}/{action}/{id?}"
@@ -105,10 +103,6 @@ namespace URLShortener
                     template: "{controller}/{action}"
                     );
 
-                routes.MapRoute(
-                    name: "",
-                    template: "{controller}/Users/{action}"
-                    );
             });
         }
 
