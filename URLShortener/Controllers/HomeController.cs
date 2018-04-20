@@ -57,7 +57,7 @@ namespace URLShortener.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 ModelState.AddModelError("", "Jakis przypal z baza :/");
             }

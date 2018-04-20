@@ -22,6 +22,7 @@ namespace URLShortener.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Url>().ToTable("Url");
+
         }
     }
 }

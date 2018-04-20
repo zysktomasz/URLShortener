@@ -9,6 +9,5 @@ namespace URLShortener.Models.ViewModels
     {
         public ApplicationUser User { get; set; }
         public List<Url> Urls { get; set; }
-
     }
 }

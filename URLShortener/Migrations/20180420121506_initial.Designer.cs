@@ -11,8 +11,8 @@ using URLShortener.Data;
 namespace URLShortener.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180414114132_Initial_UrlShortenerDB")]
-    partial class Initial_UrlShortenerDB
+    [Migration("20180420121506_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -185,11 +185,15 @@ namespace URLShortener.Migrations
                     b.Property<int>("UrlId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Id");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("TargetUrl");
 
                     b.HasKey("UrlId");
+
+                    b.HasIndex("Id");
 
                     b.ToTable("Url");
                 });
@@ -237,6 +241,13 @@ namespace URLShortener.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("URLShortener.Models.Url", b =>
+                {
+                    b.HasOne("URLShortener.Models.ApplicationUser", "User")
+                        .WithMany("Urls")
+                        .HasForeignKey("Id");
                 });
 #pragma warning restore 612, 618
         }

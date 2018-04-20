@@ -29,7 +29,7 @@ namespace URLShortener.Controllers
         
         // GET: Admin/Users/List
         [ActionName("List")]
-        [Route("[controller]/Users/[action]", Name = "ListUsers")]
+        [Route("[controller]/Users/[action]", Name = "ListUsers")] // doesnt seem to bind w asp-route in Delete.cshtml
         public async Task<IActionResult> ListUsers()
         {
 
@@ -46,16 +46,16 @@ namespace URLShortener.Controllers
         }
 
         // GET: Admin/Users/Delete/309ujpfm4jmweoiun
-        [Route("[controller]/Users/[action]", Name = "DeleteUsers")]
+        [Route("[controller]/Users/[action]/{id}", Name = "DeleteUsers")]
         public async Task<IActionResult> Delete(string id, bool? saveChangesError = false)
         {
             if (String.IsNullOrEmpty(id))
-                return NotFound();
+                RedirectToAction("List");
 
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
-                return NotFound();
+                return RedirectToAction("List");
 
             var userUrls = await _context.Urls.Where(u => u.Id == user.Id).ToListAsync();
 
@@ -71,6 +71,39 @@ namespace URLShortener.Controllers
             }
 
             return View("~/Views/Admin/Users/Delete.cshtml", userDeleteVM);
+        }
+
+        // POST: Admin/Users/Delete/234568984567
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("[controller]/Users/[action]/{id}")]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+                return RedirectToAction("List");
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return RedirectToAction("List");
+
+            var userUrls = await _context.Urls.Where(u => u.Id == id).ToListAsync();
+
+            try
+            {
+                _context.Users.Remove(user);
+                if (userUrls.Count != 0)
+                {
+                    _context.Urls.RemoveRange(userUrls);
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction("List");
+            }
+            catch (DbUpdateException ex)
+            {
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true});
+            }
         }
     }
 }

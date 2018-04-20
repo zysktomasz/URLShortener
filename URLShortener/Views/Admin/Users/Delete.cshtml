@@ -20,19 +20,26 @@
         <dd>
             @Html.DisplayFor(model => model.User.UserName)
         </dd>
-        <table class="table table-hover">
-            <thead class="thead-dark">
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Target Url
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Urls)
+        <dt>
+            @Model.User.UserName's links will be also deleted
+        </dt>
+
+    </dl>
+    <div class="row">
+        <div class="col-2"></div>
+    <table class="table table-hover col-10 table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Target Url
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Urls)
             {
                 <tr>
                     <td>
@@ -42,10 +49,10 @@
                         @Html.DisplayFor(modelItem => item.TargetUrl)
                     </td>
                 </tr>
-        }
-            </tbody>
-        </table>
-    </dl>
+            }
+        </tbody>
+    </table>
+        </div>
     <form asp-action="Delete">
         <input type="hidden" asp-for="User.Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
