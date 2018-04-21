@@ -1,0 +1,71 @@
+﻿@model PaginatedList<BlockedDomain>
+@{
+    ViewData["Title"] = "Blocked Domains";
+}
+
+<div style="max-width: 1100px; margin-left: auto; margin-right: auto;">
+    <div class="display-4">Block domain</div>
+
+    <form asp-action="BlockDomainBD" method="post">
+        <div asp-validation-summary="All" class="text-danger" style="text-align:left;"></div>
+        <div class="form-group row align-items-center">
+            <div class="input-group col-6">
+                <div class="input-group-prepend"><span class="input-group-text">http://www.</span></div>
+                <input name="DomainToBlock" class="form-control" placeholder="youtube.com">
+            </div>
+            <div class="col-4 form-group" style="text-align: left;">
+                <button type="submit" class="btn btn-primary">Block</button>
+            </div>
+        </div>
+    </form>
+    <h2>List of all blocked domains</h2>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Domain Address
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BlockedDomainId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            <form asp-action="UnblockDomainBD" method="post">
+                                <input type="hidden" asp-for="@item.Address" />
+                                <button type="submit" class="btn btn-secondary btn-sm">Unblock Domain</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="BlockedDomains"
+           asp-route-page="@(Model.PageIndex - 1)"
+           class="btn btn-dark @prevDisabled">
+            Previous
+        </a>
+        <a asp-action="BlockedDomains"
+           asp-route-page="@(Model.PageIndex + 1)"
+           class="btn btn-dark @nextDisabled">
+            Next
+        </a>
+    </div>
+</div>

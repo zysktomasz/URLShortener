@@ -40,6 +40,7 @@ namespace URLShortener.Controllers
                 ModelState.AddModelError("", $"{createdName} name is already taken. Try different one.");
                 return View();
             }
+
             
             Url url = new Url
             {
@@ -52,6 +53,15 @@ namespace URLShortener.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    // domain blocked validation placed here, cause urlVM.TargetUrl can't be null
+                    // in order to use Helper.GetUrlDomain (ModelState.IsValid has to be true)
+                    string domain = Helper.GetUrlDomain(urlVM.TargetUrl);
+                    if ((await _context.BlockedDomains.FirstOrDefaultAsync(d => d.Address == domain)) != null)
+                    {
+                        ModelState.AddModelError("", $"{domain} domain has been BLOCKED.");
+                        return View();
+                    }
+
                     _context.Add(url);
                     await _context.SaveChangesAsync();
                     TempData["shortenedUrl"] = createdName;
@@ -73,10 +83,18 @@ namespace URLShortener.Controllers
         {
             var url = await _context.Urls.FirstOrDefaultAsync(u => u.Name == urlName);
 
-            if (url != null && url.TargetUrl != null)
-                return Redirect(url.TargetUrl);
+            if (url == null)
+                return RedirectToAction(nameof(Index));
 
-            return RedirectToAction(nameof(Index));
+            string domain = Helper.GetUrlDomain(url.TargetUrl);
+            if ((await _context.BlockedDomains.FirstOrDefaultAsync(d => d.Address == domain)) != null)
+            {
+                TempData["Error"] = $"Domain ({domain}) you were being redirected to has been BLOCKED.";
+                return View(nameof(Index));
+            }
+
+            return Redirect(url.TargetUrl);
+
         }
 
 

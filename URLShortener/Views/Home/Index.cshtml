@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 <div style="max-width: 900px; margin-left: auto; margin-right: auto; text-align: center;">
-
+    <h3 class="text-danger text-center">@TempData["error"]</h3>
     @if (!String.IsNullOrEmpty((string)TempData["shortenedUrl"]))
     {
         <div class="form-group row">

@@ -1,17 +1,16 @@
 ﻿URL Shortening web app z użyciem ASP .NET Core 2.0 MVC + EF Core
 
-Prezentacja:
-
+## Prezentacja:
 ![skracanie](https://i.imgur.com/DfUYxlE.gif)
 
-Rejestracja
+## Rejestracja
 ![rejestracja](https://i.imgur.com/wmVP7VA.gif)
 
-Logowanie
-![logowanie](https://i.imgur.com/5VoofXU.gif)
-
-Lista linkow
+## Lista linkow
 ![lista linkow](https://i.imgur.com/bC8lq8t.png)
+
+## Panel Administratora
+![panel administratora](https://i.imgur.com/Q1tGDBF.gif)
 
 # Changelog
 
@@ -20,6 +19,9 @@ Lista linkow
 - Blokowanie/Odblokowanie domen z poziomu Listy Linkow (w PA)
 - Utworzenie UrlViewViewModel (zawiera wlasciwosci modelu Url i wlasciwosc IsBlocked)
 - Paginacja listy linkow w PA
+- Walidacja skracanego linku z lista zablokowanych domen na stronie glownej
+- Walidacja z lista zablokowanych domen podczas przekierowywania pod skrocony adres
+- Lista zablokowanych domen
 
 ### Zmienione
 - Zmiana aktualnego UrlViewModel na UrlCreateViewModel 
