@@ -30,6 +30,7 @@ namespace URLShortener.Controllers
             _signInManager = signInManager;
         }
 
+
         // GET: Account/List
         public async Task<IActionResult> List(int? page)
         {

@@ -40,11 +40,13 @@ namespace URLShortener.Controllers
                 ModelState.AddModelError("", $"{createdName} name is already taken. Try different one.");
                 return View();
             }
-
-            var url = new Url { };
-            url.Name = createdName;
-            url.TargetUrl = urlVM.TargetUrl;
-            url.User = await _userManager.GetUserAsync(User);
+            
+            Url url = new Url
+            {
+                Name = createdName,
+                TargetUrl = urlVM.TargetUrl,
+                User = await _userManager.GetUserAsync(User)
+            };
 
             try
             {
@@ -57,7 +59,7 @@ namespace URLShortener.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 ModelState.AddModelError("", "Jakis przypal z baza :/");
             }

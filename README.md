@@ -15,6 +15,11 @@ Lista linkow
 
 # Changelog
 
+## [0.0.3.4] - 2018-04-21
+### Dodane
+- Blokowanie domen z poziomu Listy Linkow (w PA)
+
+
 ## [0.0.3.3] - 2018-04-20
 ### Dodane
 - Usuwanie kont uzytkownikow (wraz z usunieciem konta, usuwane sa wszystkie linki uzytkownika)

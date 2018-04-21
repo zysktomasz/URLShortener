@@ -17,12 +17,13 @@ namespace URLShortener.Data
         }
 
         public DbSet<Url> Urls { get; set; }
+        public DbSet<BlockedDomain> BlockedDomains { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Url>().ToTable("Url");
-
+            modelBuilder.Entity<BlockedDomain>().ToTable("BlockedDomain");
         }
     }
 }

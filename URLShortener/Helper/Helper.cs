@@ -23,5 +23,12 @@ namespace URLShortener
 
             return new String(stringChars);
         }
+
+        public static string GetUrlDomain(string url)
+        {
+            string[] parts = url.Replace("www.", "").Split('/');
+
+            return parts[2];
+        }
     }
 }

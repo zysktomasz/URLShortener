@@ -36,6 +36,44 @@ namespace URLShortener.Controllers
             return View("~/Views/Admin/Links/List.cshtml", links);
         }
 
+        // POST: Admin/Links/BlockDomain
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("[controller]/Links/[action]")]
+        public async Task<IActionResult> BlockDomain([FromForm(Name = "item.TargetUrl")] string TargetUrl)
+        {
+            string domain = Helper.GetUrlDomain(TargetUrl);
+
+            BlockedDomain blockedDomain = new BlockedDomain
+            {
+                Address = domain
+            };
+
+            if ((await _context.BlockedDomains.FirstOrDefaultAsync(d => d.Address == domain)) != null)
+            {
+                TempData["error"] = "This domain is already bocked";
+                return RedirectToAction(nameof(ListLinks));
+            }
+
+            
+
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                    _context.Add(blockedDomain);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(ListLinks));
+                }
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Jakis przypal z baza :/");
+            }
+
+            return RedirectToAction(nameof(ListLinks));
+        }
+
         // POST: Admin/Links/DeleteLink
         [HttpPost]
         [ValidateAntiForgeryToken]
