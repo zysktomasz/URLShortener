@@ -29,11 +29,27 @@ namespace URLShortener.Controllers
 
         // GET: Admin/Links/ListLinks
         [Route("[controller]/Links/[action]")]
-        public async Task<IActionResult> ListLinks()
+        public async Task<IActionResult> ListLinks(int? page)
         {
-            var links = await _context.Urls.Include(url => url.User).OrderByDescending(u => u.UrlId).ToListAsync();
+            int pageSize = 10;
 
-            return View("~/Views/Admin/Links/List.cshtml", links);
+            var blockedDomains = await _context.BlockedDomains.Select(d => d.Address).ToListAsync();
+
+            var urls = await PaginatedList<UrlViewViewModel>.CreateAsync(
+                _context.Urls
+                .Include(url => url.User)
+                .Select(u => new UrlViewViewModel
+                {
+                    UrlId = u.UrlId,
+                    Name = u.Name,
+                    TargetUrl = (u.TargetUrl.Length > 60) ? u.TargetUrl.Substring(0,60) + "..." : u.TargetUrl,
+                    Id = u.Id,
+                    User = u.User,
+                    IsBlocked = (blockedDomains.Contains(Helper.GetUrlDomain(u.TargetUrl)))
+                }),
+                page ?? 1, pageSize);
+
+            return View("~/Views/Admin/Links/List.cshtml", urls);
         }
 
         // POST: Admin/Links/BlockDomain
@@ -43,7 +59,6 @@ namespace URLShortener.Controllers
         public async Task<IActionResult> BlockDomain([FromForm(Name = "item.TargetUrl")] string TargetUrl)
         {
             string domain = Helper.GetUrlDomain(TargetUrl);
-
             BlockedDomain blockedDomain = new BlockedDomain
             {
                 Address = domain
@@ -51,17 +66,44 @@ namespace URLShortener.Controllers
 
             if ((await _context.BlockedDomains.FirstOrDefaultAsync(d => d.Address == domain)) != null)
             {
-                TempData["error"] = "This domain is already bocked";
+                TempData["error"] = "This domain is already blocked";
                 return RedirectToAction(nameof(ListLinks));
             }
-
-            
 
             try
             {
                 if(ModelState.IsValid)
                 {
                     _context.Add(blockedDomain);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(ListLinks));
+                }
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Jakis przypal z baza :/");
+            }
+
+            return RedirectToAction(nameof(ListLinks));
+        }
+
+        // POST: Admin/Links/UnblockDomain
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("[controller]/Links/[action]")]
+        public async Task<IActionResult> UnblockDomain([FromForm(Name = "item.TargetUrl")] string TargetUrl)
+        {
+
+            var domainToUnblock = await _context.BlockedDomains.FirstOrDefaultAsync(d => d.Address == Helper.GetUrlDomain(TargetUrl));
+
+            if (domainToUnblock == null)
+                return RedirectToAction(nameof(ListLinks));
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Remove(domainToUnblock);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(ListLinks));
                 }
@@ -173,7 +215,7 @@ namespace URLShortener.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ListUsers));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return RedirectToAction(nameof(DeleteUser), new { id = id, saveChangesError = true});
             }

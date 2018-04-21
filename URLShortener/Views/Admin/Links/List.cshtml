@@ -1,4 +1,4 @@
-﻿@model List<Url>
+﻿@model PaginatedList<UrlViewViewModel>
 @{
     ViewData["Title"] = "List";
 }
@@ -20,34 +20,61 @@
                         Target Url
                     </th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.User.UserName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TargetUrl)
-                        </td>
-                        <td>
-                            <form asp-action="DeleteLink" asp-route-id="@item.UrlId" method="post">
-                                <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
-                            </form>
-                            <form asp-action="BlockDomain" method="post">
-                                <input type="hidden" asp-for="@item.TargetUrl" />
-                                <button type="submit" class="btn btn-secondary btn-sm">Block Domain</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
+                var blockedDomainInfo = item.IsBlocked ? "table-danger" : "";
+                <tr class="@blockedDomainInfo">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TargetUrl)
+                    </td>
+                    <td>
+                        <form asp-action="DeleteLink" asp-route-id="@item.UrlId" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                    <td>
+                        @if (item.IsBlocked)
+                        {
+                        <form asp-action="UnblockDomain" method="post">
+                            <input type="hidden" asp-for="@item.TargetUrl" />
+                            <button type="submit" class="btn btn-secondary btn-sm">Unblock Domain</button>
+                        </form>
+                        }
+                        else {
+                        <form asp-action="BlockDomain" method="post">
+                            <input type="hidden" asp-for="@item.TargetUrl" />
+                            <button type="submit" class="btn btn-warning btn-sm">Block Domain</button>
+                        </form>
+                        }
+                    </td>
+                </tr>
+        }
             </tbody>
         </table>
-        
+        @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="ListLinks"
+           asp-route-page="@(Model.PageIndex - 1)"
+           class="btn btn-dark @prevDisabled">
+            Previous
+        </a>
+        <a asp-action="ListLinks"
+           asp-route-page="@(Model.PageIndex + 1)"
+           class="btn btn-dark @nextDisabled">
+            Next
+        </a>
     </div>
 </div>

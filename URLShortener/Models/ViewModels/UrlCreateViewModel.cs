@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace URLShortener.Models.ViewModels
 {
-    public class UrlViewModel
+    public class UrlCreateViewModel
     {
         [Required(ErrorMessage = "Your target address field is required.")]
         [Url] // **temporary** url validation, will prolly replace with something custom

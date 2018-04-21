@@ -15,10 +15,14 @@ Lista linkow
 
 # Changelog
 
-## [0.0.3.4] - 2018-04-21
+## [0.0.4.0] - 2018-04-21
 ### Dodane
-- Blokowanie domen z poziomu Listy Linkow (w PA)
+- Blokowanie/Odblokowanie domen z poziomu Listy Linkow (w PA)
+- Utworzenie UrlViewViewModel (zawiera wlasciwosci modelu Url i wlasciwosc IsBlocked)
+- Paginacja listy linkow w PA
 
+### Zmienione
+- Zmiana aktualnego UrlViewModel na UrlCreateViewModel 
 
 ## [0.0.3.3] - 2018-04-20
 ### Dodane

@@ -25,13 +25,13 @@ namespace URLShortener.Controllers
         // GET: /Index
         public IActionResult Index()
         {
-            return View(new UrlViewModel{});
+            return View(new UrlCreateViewModel{});
         }
 
         // POST: /Index
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async  Task<IActionResult> Index([Bind("TargetUrl,Name")] UrlViewModel urlVM)
+        public async  Task<IActionResult> Index([Bind("TargetUrl,Name")] UrlCreateViewModel urlVM)
         {
             var createdName = urlVM.Name ?? Helper.GenerateRandomUrlName();
 
