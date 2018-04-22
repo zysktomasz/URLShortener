@@ -14,6 +14,14 @@
 
 # Changelog
 
+## [0.0.4.1] - 2018-04-22
+### Dodane
+- Przycisk kopiujacy skrocony link do schowka (js)
+- Podglad adresu docelowego przed przekierowaniem (/Preview/NAZWA_SKROCONEGO_ADRESU)
+
+### Zmienione
+
+
 ## [0.0.4.0] - 2018-04-21
 ### Dodane
 - Blokowanie/Odblokowanie domen z poziomu Listy Linkow (w PA)

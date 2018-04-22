@@ -84,7 +84,7 @@ namespace URLShortener
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "actions",
+                    name: "",
                     template: "{action=Index}",
                     defaults: new { controller = "Home" });
 

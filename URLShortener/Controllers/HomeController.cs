@@ -31,7 +31,7 @@ namespace URLShortener.Controllers
         // POST: /Index
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async  Task<IActionResult> Index([Bind("TargetUrl,Name")] UrlCreateViewModel urlVM)
+        public async Task<IActionResult> Index([Bind("TargetUrl,Name")] UrlCreateViewModel urlVM)
         {
             var createdName = urlVM.Name ?? Helper.GenerateRandomUrlName();
 
@@ -77,6 +77,19 @@ namespace URLShortener.Controllers
             return View();
         }
 
+        // GET: /Preview/{urlName}
+        [Route("/Preview/{urlName}")]
+        public async Task<IActionResult> Preview(string urlName)
+        {
+            var url = await _context.Urls.FirstOrDefaultAsync(u => u.Name == urlName);
+
+            if (url == null)
+                return RedirectToAction(nameof(Index));
+
+            ViewData["TargetUrl"] = url.TargetUrl;
+            ViewData["Name"] = url.Name;
+            return View();
+        }
 
         // GET: /RedirectToAction
         public async Task<IActionResult> RedirectToTarget(string urlName)
