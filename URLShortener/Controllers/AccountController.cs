@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace URLShortener.Controllers
 {
     [Authorize]
+    [Route("[controller]/[action]/{id?}")]
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -36,7 +37,6 @@ namespace URLShortener.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
             int pageSize = 6;
-
             var urls = await PaginatedList<Url>.CreateAsync(
                 _context.Urls
                 .Where(u => u.User == currentUser)
