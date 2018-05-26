@@ -13,7 +13,7 @@ using URLShortener.Models.ViewModels;
 
 namespace URLShortener.Controllers
 {
-    [Authorize(Policy = "RequireAdministratorRole")]
+    [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
